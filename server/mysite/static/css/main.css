@@ -1,0 +1,57 @@
+
+body {
+    background: #B9DBDC;
+}
+
+.top_spacer
+{
+    height: 100pt;
+}
+
+#logo {
+    height : 100pt;
+    width: 100pt;
+    margin : auto;
+    border: none;
+}
+
+#logo img {
+    height: 100%;
+    width: 100%;
+}
+
+#spacer {
+    height: 60px;
+}
+
+.logo_text {
+    border: none;
+    margin: auto;
+    font-size: 20pt;
+    font-family: Baloo Bhaina;
+    text-align: center;
+    color: #cd3131
+}
+
+/*this is for fb login button*/
+
+.fb-login{
+    margin: auto;
+    text-align: center;
+}
+
+.fb_iframe_widget {display: block !important;}
+
+/*end*/
+
+.lower_line
+{
+    background : #CD3131;
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+    height: 5%;
+    width: 100%;
+}
+
