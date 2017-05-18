@@ -9,8 +9,8 @@ body {
 }
 
 #logo {
-    height : 100pt;
-    width: 100pt;
+    height : 200pt;
+    width: 200pt;
     margin : auto;
     border: none;
 }
@@ -18,19 +18,6 @@ body {
 #logo img {
     height: 100%;
     width: 100%;
-}
-
-#spacer {
-    height: 60px;
-}
-
-.logo_text {
-    border: none;
-    margin: auto;
-    font-size: 20pt;
-    font-family: Baloo Bhaina;
-    text-align: center;
-    color: #cd3131
 }
 
 /*this is for fb login button*/
