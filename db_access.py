@@ -6,6 +6,7 @@ USERS_TABLE = "users"
 GROUPS_TABLE = "groups"
 MEMBERSHIPS_TABLE = "memberships"
 GIFTS_TABLE = "gifts"
+INVITATIONS_TABLE = "invitations"
 SETTINGS_TABLE = "settings"
 GROUP_ID_COUNTER = "groupIdCounter"
 GIFTS_ID_COUNTER = "giftsIdCounter"
@@ -15,7 +16,7 @@ class User:
     """ 
     Represents a user profile in the system 
     """
-    def __init__(self, id, firstname, lastname, country, city, address, zip, aboutme, groups):
+    def __init__(self, id, firstname, lastname, country, city, address, zip, aboutme, groups, invitations):
         self.id = id
         self.firstname = firstname
         self.lastname = lastname
@@ -25,6 +26,7 @@ class User:
         self.zip = zip
         self.aboutme = aboutme
         self.groups = groups
+        self.invitations = invitations
 
 class Group:
     """ 
@@ -70,6 +72,21 @@ def initialize():
     conn.commit()
     conn.close()
 
+def doesUserExist(id):
+    """
+    Checks is a user exists in the system
+    """
+    conn = sqlite3.connect(DB_NAME)
+
+    # attempt to retrieve user info
+    select_cmd = "SELECT * FROM %s WHERE id = %s" % (USERS_TABLE, id)
+    cursor = conn.execute(select_cmd)
+
+    if (cursor.fetchone() == None):
+        return False
+
+    return True
+
 def createUser(id, firstname, lastname, country, city, address, zip, aboutme):
     """
     Creates a new user profile in the database
@@ -91,13 +108,19 @@ def getUser(id):
     select_cmd = "SELECT * FROM %s WHERE id = %s" % (USERS_TABLE, id)
     cursor = conn.execute(select_cmd)
     for row in cursor:
-        ret = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], [])
+        ret = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], [], [])
 
     # get user groups
     select_cmd = "SELECT groupid FROM %s WHERE userid = %s" % (MEMBERSHIPS_TABLE, id)
     cursor = conn.execute(select_cmd)
     for row in cursor:
         ret.groups.append(row[0])
+
+    # get user invitations
+    select_cmd = "SELECT groupid FROM %s WHERE userid = %s" % (INVITATIONS_TABLE, id)
+    cursor = conn.execute(select_cmd)
+    for row in cursor:
+        ret.invitations.append(row[0])
 
     conn.close()
     return ret
@@ -152,7 +175,7 @@ def addUsersToGroup(userIds, groupId):
     """
     conn = sqlite3.connect(DB_NAME)
     for id in userIds:
-        insert_cmd = "INSERT INTO %s VALUES (%s, '%s', -1, 'FALSE', -1)" \
+        insert_cmd = "INSERT INTO %s VALUES (%s, %s, -1, 'FALSE', -1)" \
                      % (MEMBERSHIPS_TABLE, id, groupId)
         conn.execute(insert_cmd)
     conn.commit()
@@ -245,10 +268,43 @@ def getGift(giftId):
     select_cmd = "SELECT groupid FROM %s WHERE giftid = %s" % (MEMBERSHIPS_TABLE, giftId)
     cursor = conn.execute(select_cmd)
     for row in cursor:
-        ret.groupId= row[0]
+        ret.groupId = row[0]
 
     conn.close()
     return ret
+
+def invite(userId, groupId):
+    """
+    Invites a user to join a group
+    """
+    conn = sqlite3.connect(DB_NAME)
+
+    # create new invitation
+    insert_cmd = "INSERT INTO %s VALUES (%s, %s)" \
+                 % (INVITATIONS_TABLE, userId, groupId)
+    conn.execute(insert_cmd)
+
+    conn.commit()
+    conn.close()
+
+def joinGroup(userId, groupId):
+    """
+    Joins a user to a group
+    """
+    conn = sqlite3.connect(DB_NAME)
+
+    # create membership
+    insert_cmd = "INSERT INTO %s VALUES (%s, %s, -1, 'FALSE', -1)" \
+                     % (MEMBERSHIPS_TABLE, userId, groupId)
+    conn.execute(insert_cmd)
+
+    # delete invitation
+    delete_cmd = "DELETE FROM %s WHERE userid = %s AND groupid = %s" \
+        % (INVITATIONS_TABLE, userId, groupId)
+    conn.execute(delete_cmd)
+
+    conn.commit()
+    conn.close()
 
 def permutationWithoutFixedPoints(numbers):
     """
