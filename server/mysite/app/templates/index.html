@@ -3,25 +3,16 @@
 {% load staticfiles %}
 
 <head>
-    <title>Facebook Login JavaScript Example</title>
+    <title>GAMADANAK - Welcome!</title>
     <meta charset="UTF-8">
-    <link href='//fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
-    <style>
-        body {
-            font-family: 'Comfortaa';
-        }
-    </style>
+    <link href='//fonts.googleapis.com/css?family=Baloo+Bhaina' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href='{% static "css/main.css" %}'>
 </head>
 <body>
-<div id="page">
-    <div id="logo">
-        <img src='{% static "images/logo1024.png" %}' alt="My image"/>
-    </div>
-</div>
 <script>
     // This is called with the results from from FB.getLoginStatus().
     function statusChangeCallback(response) {
-        console.log('statusChangeCallback');
+        console.log("this A");
         // The response object is returned with a status field that lets the
         // app know the current login status of the person.
         // Full docs on the response object can be found in the documentation
@@ -29,11 +20,11 @@
         if (response.status === 'connected') {
             // Logged into your app and Facebook.
             testAPI(response);
+            console.log("this C")
         } else {
             // The person is not logged into your app or we are unable to tell.
-            document.getElementById('status').innerHTML = 'Please log ' +
-                'into this app.';
         }
+        console.log("this B!")
     }
 
     // This function is called when someone finishes with the Login
@@ -43,6 +34,8 @@
         FB.getLoginStatus(function(response) {
             statusChangeCallback(response);
         });
+        console.log("this D")
+        window.location.href = "/my_account";
     }
 
     window.fbAsyncInit = function() {
@@ -87,42 +80,27 @@
         console.log('Welcome!  Fetching your information.... ');
         FB.api('/me', function(response) {
             console.log('Successful login for: ' + response.name);
-            document.getElementById('status').innerHTML =
-                'Thanks for logging in, ' + response.name + '!';
-            console.log(response)
         });
-        /* make the API call */
-        console.log(response);
-
-        var id = response.authResponse.userID
-
-        console.log("response.authResponse.userID:" + id);
-        FB.api(
-            "/me/taggable_friends",
-            function (response_1) {
-                if (response_1 && !response_1.error) {
-                    console.log(response_1)
-                }
-                else {
-                    console.log("B");
-                }
-            }
-        );
-
     }
 </script>
-
-<!--
-  Below we include the Login Button social plugin. This button uses
-  the JavaScript SDK to present a graphical Login button that triggers
-  the FB.login() function when clicked.
--->
-
-<fb:login-button data-width="100" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true" scope="public_profile,email,user_likes,user_friends" onlogin="checkLoginState();">
-</fb:login-button>
-
-<div id="status">
+<div class="all" id="page">
+    <div class="top_spacer"></div>
+    <div id="logo">
+        <img src='{% static "images/LOGO-for-welcome-page.png" %}' alt="logo"/>
+    </div>
+    <div class="fb_login">
+            <!--
+          Below we include the Login Button social plugin. This button uses
+          the JavaScript SDK to present a graphical Login button that triggers
+          the FB.login() function when clicked.
+        -->
+        <fb:login-button id="fb_login_btn" style='text-align: center;' data-width="100" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true" scope="public_profile,email,user_likes,user_friends" onlogin="checkLoginState();">
+        </fb:login-button>
+    </div>
+    <div class="lower_line"></div>
 </div>
+
+
 
 </body>
 </html>

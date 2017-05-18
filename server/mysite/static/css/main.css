@@ -1,0 +1,44 @@
+
+body {
+    background: #B9DBDC;
+}
+
+.top_spacer
+{
+    height: 100pt;
+}
+
+#logo {
+    height : 200pt;
+    width: 200pt;
+    margin : auto;
+    border: none;
+}
+
+#logo img {
+    height: 100%;
+    width: 100%;
+}
+
+/*this is for fb login button*/
+
+.fb-login{
+    margin: auto;
+    text-align: center;
+}
+
+.fb_iframe_widget {display: block !important;}
+
+/*end*/
+
+.lower_line
+{
+    background : #CD3131;
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+    height: 5%;
+    width: 100%;
+}
+

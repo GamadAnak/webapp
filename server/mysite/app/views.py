@@ -7,5 +7,5 @@ from django.views.generic import TemplateView
 class HomePageView(TemplateView):
     template_name = "index.html"
 
-class SomePageView(TemplateView):
-    template_name = "somepage.html"
+class MyAccountView(TemplateView):
+    template_name = "my_account.html"
