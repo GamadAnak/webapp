@@ -61,6 +61,12 @@ def initialize():
     """
     conn = sqlite3.connect(DB_NAME)
 
+    # check if already initialized
+    select_cmd = "SELECT * FROM %s" % (SETTINGS_TABLE)
+    cursor = conn.execute(select_cmd)
+    if (cursor.fetchone() != None):
+        return
+
     # init group id counter
     insert_cmd = "INSERT INTO %s VALUES('%s', 0)" % (SETTINGS_TABLE, GROUP_ID_COUNTER)
     conn.execute(insert_cmd)
