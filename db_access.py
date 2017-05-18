@@ -5,15 +5,17 @@ DB_NAME = "gamadanak.db"
 USERS_TABLE = "users"
 GROUPS_TABLE = "groups"
 MEMBERSHIPS_TABLE = "memberships"
+GIFTS_TABLE = "gifts"
 SETTINGS_TABLE = "settings"
-GROUP_ID_COUNTER_NAME = "groupIdCounter"
+GROUP_ID_COUNTER = "groupIdCounter"
+GIFTS_ID_COUNTER = "giftsIdCounter"
 
 ## classes
 class User:
     """ 
     Represents a user profile in the system 
     """
-    def __init__(self, id, firstname, lastname, country, city, address, zip):
+    def __init__(self, id, firstname, lastname, country, city, address, zip, aboutme, groups):
         self.id = id
         self.firstname = firstname
         self.lastname = lastname
@@ -21,7 +23,8 @@ class User:
         self.city = city
         self.address = address
         self.zip = zip
-        return;
+        self.aboutme = aboutme
+        self.groups = groups
 
 class Group:
     """ 
@@ -35,7 +38,19 @@ class Group:
         self.max = max
         self.closed = closed
         self.memberIds = memberIds
-        return;
+
+class Gift:
+    """ 
+    Represents a gift in the system 
+    """
+
+    def __init__(self, id, url, groupId, giantId, dwarfId, letter):
+        self.id = id
+        self.url = url
+        self.groupId = groupId
+        self.giantId = giantId
+        self.dwarfId = dwarfId
+        self.letter = letter
 
 ## functions
 def initialize():
@@ -43,33 +58,49 @@ def initialize():
     Initializes the database settings, needs to be called before using other functions 
     """
     conn = sqlite3.connect(DB_NAME)
-    insert_cmd = "INSERT INTO %s VALUES('%s', 0)" % (SETTINGS_TABLE, GROUP_ID_COUNTER_NAME)
+
+    # init group id counter
+    insert_cmd = "INSERT INTO %s VALUES('%s', 0)" % (SETTINGS_TABLE, GROUP_ID_COUNTER)
     conn.execute(insert_cmd)
+
+    # init gifts id counter
+    insert_cmd = "INSERT INTO %s VALUES('%s', 0)" % (SETTINGS_TABLE, GIFTS_ID_COUNTER)
+    conn.execute(insert_cmd)
+
     conn.commit()
     conn.close()
 
-def createUser(id, firstname, lastname, country, city, address, zip):
+def createUser(id, firstname, lastname, country, city, address, zip, aboutme):
     """
     Creates a new user profile in the database
     """
     conn = sqlite3.connect(DB_NAME)
-    insert_cmd = "INSERT INTO %s VALUES (%s, '%s', '%s', '%s', '%s', '%s', %s)" \
-                 % (USERS_TABLE, str(id), firstname, lastname, country, city, address, str(zip))
+    insert_cmd = "INSERT INTO %s VALUES (%s, '%s', '%s', '%s', '%s', '%s', %s, '%s')" \
+                 % (USERS_TABLE, id, firstname, lastname, country, city, address, zip, aboutme)
     conn.execute(insert_cmd)
     conn.commit()
     conn.close()
 
 def getUser(id):
     """
-    Retrieves a user profile 
+    Retrieves a user profile and the groups it is in
     """
     conn = sqlite3.connect(DB_NAME)
+
+    # get user info
     select_cmd = "SELECT * FROM %s WHERE id = %s" % (USERS_TABLE, id)
     cursor = conn.execute(select_cmd)
     for row in cursor:
-        user = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
+        ret = User(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], [])
+
+    # get user groups
+    select_cmd = "SELECT groupid FROM %s WHERE userid = %s" % (MEMBERSHIPS_TABLE, id)
+    cursor = conn.execute(select_cmd)
+    for row in cursor:
+        ret.groups.append(row[0])
+
     conn.close()
-    return user
+    return ret
 
 def createGroup(name, adminid, min ,max):
     """
@@ -78,13 +109,13 @@ def createGroup(name, adminid, min ,max):
     conn = sqlite3.connect(DB_NAME)
 
     # get current available group id and increment it
-    select_cmd = "SELECT * FROM %s WHERE name = '%s'" % (SETTINGS_TABLE, GROUP_ID_COUNTER_NAME)
+    select_cmd = "SELECT * FROM %s WHERE name = '%s'" % (SETTINGS_TABLE, GROUP_ID_COUNTER)
     cursor = conn.execute(select_cmd)
     for row in cursor:
         group_id = int(row[1]);
     incremented_group_id = group_id + 1;
     update_cmd = "UPDATE %s SET value = %s WHERE name = '%s'" % \
-                 (SETTINGS_TABLE, incremented_group_id, GROUP_ID_COUNTER_NAME)
+                 (SETTINGS_TABLE, incremented_group_id, GROUP_ID_COUNTER)
     conn.execute(update_cmd)
 
     # create new group
@@ -121,7 +152,7 @@ def addUsersToGroup(userIds, groupId):
     """
     conn = sqlite3.connect(DB_NAME)
     for id in userIds:
-        insert_cmd = "INSERT INTO %s VALUES (%s, '%s', -1)" \
+        insert_cmd = "INSERT INTO %s VALUES (%s, '%s', -1, 'FALSE', -1)" \
                      % (MEMBERSHIPS_TABLE, id, groupId)
         conn.execute(insert_cmd)
     conn.commit()
@@ -153,6 +184,71 @@ def assignGiants(groupId):
     conn.close()
 
     return assignments
+
+def getAssignment(userid, groupid):
+    """
+    Gets the assignment of the user in the group
+    """
+    conn = sqlite3.connect(DB_NAME)
+
+    select_cmd = "SELECT giantid FROM %s WHERE userid = %s AND groupid = %s" % \
+                 (MEMBERSHIPS_TABLE, userid, groupid)
+    cursor = conn.execute(select_cmd)
+    for row in cursor:
+        ret = row[0]
+
+    conn.close()
+    return ret
+
+def createGift(groupid, url, giantid, dwarfid, letter):
+    """
+    Creates a new gift in the database
+    """
+    conn = sqlite3.connect(DB_NAME)
+
+    # get current available gift id and increment it
+    select_cmd = "SELECT * FROM %s WHERE name = '%s'" % (SETTINGS_TABLE, GIFTS_ID_COUNTER)
+    cursor = conn.execute(select_cmd)
+    for row in cursor:
+        gift_id = int(row[1]);
+    incremented_gift_id = gift_id + 1;
+    update_cmd = "UPDATE %s SET value = %s WHERE name = '%s'" % \
+                 (SETTINGS_TABLE, incremented_gift_id, GIFTS_ID_COUNTER)
+    conn.execute(update_cmd)
+
+    # create new gift
+    insert_cmd = "INSERT INTO %s VALUES (%s, '%s', %s, %s, '%s')" \
+                 % (GIFTS_TABLE, gift_id, url, giantid, dwarfid, letter)
+    conn.execute(insert_cmd)
+
+    # update membership table
+    update_cmd = "UPDATE %s SET giftready = 'TRUE', giftid = %s WHERE userid = %s AND groupid = %s" \
+    % (MEMBERSHIPS_TABLE, gift_id, dwarfid, groupid)
+    conn.execute(update_cmd)
+
+    conn.commit()
+    conn.close()
+
+def getGift(giftId):
+    """
+    Gets the gift info
+    """
+    conn = sqlite3.connect(DB_NAME)
+
+    # get gift info
+    select_cmd = "SELECT * FROM %s WHERE id = %s" % (GIFTS_TABLE, giftId)
+    cursor = conn.execute(select_cmd)
+    for row in cursor:
+        ret = Gift(row[0], row[1], -1, row[2], row[3], row[4])
+
+    # get group id
+    select_cmd = "SELECT groupid FROM %s WHERE giftid = %s" % (MEMBERSHIPS_TABLE, giftId)
+    cursor = conn.execute(select_cmd)
+    for row in cursor:
+        ret.groupId= row[0]
+
+    conn.close()
+    return ret
 
 def permutationWithoutFixedPoints(numbers):
     """
