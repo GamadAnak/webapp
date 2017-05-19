@@ -1,0 +1,76 @@
+
+body {
+    background: #FFFFFF;
+}
+
+.upper_bar
+{
+    background : #8fc5b0;
+    position: fixed;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    height: 15%;
+    width: 100%;
+}
+
+.corner_container{
+    position: relative;
+}
+
+.corner_logo{
+    position: relative;
+    top: 10%;
+    left:1%;
+    width: auto%;
+    height: 90%;
+}
+
+.corner_text{
+    position: absolute;
+    bottom:0;
+    font-family: Baloo Bhaina;
+    vertical-align: bottom;
+    size: 8pt;
+}
+
+.side_bar{
+    background : #e4ebf0;
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    left: 1%;
+    height: 100%;
+    width: 17%;
+    font-family: Comfortaa;
+}
+
+.profile_pic{
+    position: relative;
+    top: 20%;
+    left: 20%;
+    width: 60%;
+    height: auto;
+}
+
+.profile_pic img {
+    margin: auto;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.profile_pic p {
+    font-family: Comfortaa;
+    size: 8pt;
+    text-align: center;
+}
+
+.nav_menu{
+    top: 22%;
+    position: relative;
+}
+
+li {
+    padding-bottom: 6pt;
+}
