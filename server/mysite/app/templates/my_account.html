@@ -128,7 +128,7 @@
             document.getElementById("user_name").innerHTML = response.name;
         });
 
-        FB.api('/me/picture', function(response) {
+        FB.api('/me/picture?height=500', function(response) {
             document.getElementById("profile_pic_circ").src = response.data.url;
         });
 
