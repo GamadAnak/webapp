@@ -80,7 +80,7 @@
     function testAPI(response) {
         console.log('Welcome!  Fetching your information.... ');
         FB.api('/me', function(response) {
-            console.log('Successful login for: ' + response.name);
+            console.log(response);
         });
     }
 </script>
@@ -95,7 +95,7 @@
           the JavaScript SDK to present a graphical Login button that triggers
           the FB.login() function when clicked.
         -->
-        <fb:login-button id="fb_login_btn" style='text-align: center;' data-width="100" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true" scope="public_profile,email,user_likes,user_friends" onlogin="checkLoginState();">
+        <fb:login-button id="fb_login_btn" style='text-align: center;' data-width="100" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="true" scope="public_profile,email,user_likes,user_friends,user_about_me" onlogin="checkLoginState();">
         </fb:login-button>
     </div>
     <div class="lower_line"></div>
