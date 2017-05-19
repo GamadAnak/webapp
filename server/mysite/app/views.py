@@ -9,3 +9,6 @@ class HomePageView(TemplateView):
 
 class MyAccountView(TemplateView):
     template_name = "my_account.html"
+
+class MyGroupsView(TemplateView):
+    template_name = "my_groups.html"

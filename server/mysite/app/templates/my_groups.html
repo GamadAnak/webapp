@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html lang="en">
+
+    <meta charset="UTF-8">
+    <title>GAMADANAK - My Account</title>
+    <link href='//fonts.googleapis.com/css?family=Baloo+Bhaina' rel='stylesheet'>
+    <link href='//fonts.googleapis.com/css?family=Comfortaa' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href='{% static "css/main.css" %}'>
+    <link rel="stylesheet" type="text/css" href='{% static "css/my_account.css" %}'>
+</head>
+<body>
+
+<div class="upper_bar">
+    <div class="corner_logo"><img class='corner_logo' src='{% static "images/logo-with-Text.png" %}'/></div>
+</div>
+
+<div class="side_bar">
+
+    <div class="profile_pic">
+        <img src="https://fb-s-b-a.akamaihd.net/h-ak-fbx/v/t1.0-9/15780634_10154936472623944_7250513915932582956_n.jpg?oh=f306c98b0b1949a30598e62d4c3ba078&oe=59B91FF2&__gda__=1501073708_c732d3d5d124539c753179a1aa4285af"/>
+        <p id="user_name" class="profile_user">Place Holder</p>
+    </div>
+
+    <div class="nav_menu">
+
+        <ul>
+
+            <li><href>My Account</href></li>
+            <li><href>Invitations</href></li>
+            <li><href>My Groups</href></li>
+            <li><href>Create Group</href></li>
+            <li><href>Instructions</href></li>
+
+        </ul>
+
+    </div>
+</div>
+
+
+<div class="main_window">
+    <div class="main_window_data">
+        <p style="font-size: 30px">My Groups</p>
+    </div>
+</div>
+
+<div class="lower_line"/>
+<script type="text/javascript" src="{% static 'js/my_account.js' %}"></script>
+</body>
+</html>
