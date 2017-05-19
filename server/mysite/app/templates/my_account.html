@@ -43,7 +43,7 @@
     <h1>My Account</h1>
     <form class="description">
         <p>Self Description and Stuff I Like</p>
-        <textarea class=""></textarea>
+        <textarea id="likes"></textarea>
     </form>
     </div>
 </div>
@@ -115,9 +115,16 @@
     // Here we run a very simple test of the Graph API after login is
     // successful.  See statusChangeCallback() for when this call is made.
     function testAPI(response) {
+
+        var id = "";
+
         console.log('Welcome!  Fetching your information.... ');
         FB.api('/me', function(response) {
+            console.log("hey");
             console.log(response);
+            console.log(response.id);
+            id = response.id;
+            console.log("bye");
             document.getElementById("user_name").innerHTML = response.name;
         });
 
@@ -125,9 +132,11 @@
             document.getElementById("profile_pic_circ").src = response.data.url;
         });
 
-//        FB.api('/me/about', function(response) {
-//            console.log(response);
-//        });
+        FB.api('/me/likes', function(response) {
+            response.data.forEach(function (element, index, array) {
+                document.getElementById("likes").innerHTML += element.name + ", ";
+            })
+        });
     };
 </script>
 </body>
