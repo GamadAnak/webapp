@@ -73,7 +73,6 @@
         if (response.status === 'connected') {
             // Logged into your app and Facebook.
             testAPI(response);
-            document.getElementById("user_id").textContent = response.id;
         } else {
             // The person is not logged into your app or we are unable to tell.
         }
@@ -84,6 +83,7 @@
     // code below.
     function checkLoginState() {
         FB.getLoginStatus(function(response) {
+
             statusChangeCallback(response);
         });
     }
@@ -133,6 +133,7 @@
         FB.api('/me', function(response) {
             id = response.id;
             document.getElementById("user_name").innerHTML = response.name;
+            document.getElementById("user_id").value = response.id;
         });
 
         FB.api('/me/picture?height=500', function(response) {
