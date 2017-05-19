@@ -90,10 +90,33 @@ li {
 
 .main_window_data{
     margin-left: 20px;
+    float: left;
 }
 
 #likes {
     border-radius: 5px;
-    width: 500px;
+    width: 400px;
     height: 200px;
+}
+
+#adress_form{
+    margin-top: 15%;
+    margin-right: 15%;
+    float: right;
+}
+
+#submit_user{
+    font-family: Comfortaa;
+    border: none;
+    border-radius: 2px;
+    background-color: #8fc5b0;
+    padding: 6px 6px 6px 6px;
+}
+
+#submit_user:hover{
+    font-family: Comfortaa;
+    border: none;
+    border-radius: 2px;
+    background-color: #a3cebb;
+    padding: 6px 6px 6px 6px;
 }
