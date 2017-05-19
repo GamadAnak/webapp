@@ -10,6 +10,7 @@ conn.execute("DROP TABLE IF EXISTS users")
 conn.execute("DROP TABLE IF EXISTS groups")
 conn.execute("DROP TABLE IF EXISTS memberships")
 conn.execute("DROP TABLE IF EXISTS gifts")
+conn.execute("DROP TABLE IF EXISTS invitations")
 conn.execute("DROP TABLE IF EXISTS settings")
 
 print("Dropped tables: users, groups, memberships")
@@ -31,6 +32,7 @@ conn.execute("CREATE TABLE groups( \
               min FLOAT NOT NULL, \
               max FLOAT NOT NULL, \
               closed BOOLEAN NOT NULL, \
+              image TEXT NOT NULL, \
               FOREIGN KEY (adminid) REFERENCES users(adminid))")
 
 conn.execute("CREATE TABLE memberships( \
@@ -53,7 +55,12 @@ conn.execute("CREATE TABLE gifts( \
               dwarfid INT NOT NULL, \
               FOREIGN KEY (giantid) REFERENCES users(giantid), \
               FOREIGN KEY (dwarfid) REFERENCES users(dwarfid))")
-             
+
+conn.execute("CREATE TABLE invitations( \
+              userid INT NOT NULL, \
+              groupid INT NOT NULL, \
+              UNIQUE(userid, groupid))")
+
 conn.execute("CREATE TABLE settings( \
               name TEXT PRIMARY KEY NOT NULL, \
               value TEXT NOT NULL)")

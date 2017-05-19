@@ -32,13 +32,14 @@ class Group:
     """ 
     Represents a group in the system 
     """
-    def __init__(self, id, name, adminId, min, max, closed, memberIds):
+    def __init__(self, id, name, adminId, min, max, closed, image, memberIds):
         self.id = id
         self.name = name
         self.adminId = adminId
         self.min = min
         self.max = max
         self.closed = closed
+        self.image = image
         self.memberIds = memberIds
 
 class Gift:
@@ -131,7 +132,7 @@ def getUser(id):
     conn.close()
     return ret
 
-def createGroup(name, adminid, min ,max):
+def createGroup(name, adminid, min ,max, image):
     """
     Creates a new group in the database
     """
@@ -148,8 +149,8 @@ def createGroup(name, adminid, min ,max):
     conn.execute(update_cmd)
 
     # create new group
-    insert_cmd = "INSERT INTO %s VALUES (%s, '%s', '%s', %s, %s, 'FALSE')" \
-                 % (GROUPS_TABLE, group_id, name, adminid, min, max)
+    insert_cmd = "INSERT INTO %s VALUES (%s, '%s', '%s', %s, %s, 'FALSE', '%s')" \
+                 % (GROUPS_TABLE, group_id, name, adminid, min, max, image)
     conn.execute(insert_cmd)
     conn.commit()
     conn.close()
@@ -164,7 +165,7 @@ def getGroup(groupId):
     select_cmd = "SELECT * FROM %s WHERE id = %s" % (GROUPS_TABLE, groupId)
     cursor = conn.execute(select_cmd)
     for row in cursor:
-        ret = Group(row[0], row[1], row[2], row[3], row[4], row[5], [])
+        ret = Group(row[0], row[1], row[2], row[3], row[4], row[5], row[6], [])
 
     # get group members
     select_cmd = "SELECT userid FROM %s WHERE groupid = %s" % (MEMBERSHIPS_TABLE, groupId)
